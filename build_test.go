@@ -96,7 +96,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		Expect(result.Layers).To(HaveLen(1))
 		Expect(result.Layers[0].Name).To(Equal("php-httpd-config"))
 		Expect(result.Layers[0].Path).To(Equal(filepath.Join(layerDir, "php-httpd-config")))
-		Expect(result.Layers[0].LaunchEnv).To(Equal(packit.Environment{
+		Expect(result.Layers[0].SharedEnv).To(Equal(packit.Environment{
 			"PHP_HTTPD_PATH.default": "some-workspace/httpd.conf",
 		}))
 
@@ -133,7 +133,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 			Expect(result.Layers).To(HaveLen(1))
 			Expect(result.Layers[0].Name).To(Equal("php-httpd-config"))
 			Expect(result.Layers[0].Path).To(Equal(filepath.Join(layerDir, "php-httpd-config")))
-			Expect(result.Layers[0].LaunchEnv).To(Equal(packit.Environment{
+			Expect(result.Layers[0].SharedEnv).To(Equal(packit.Environment{
 				"PHP_HTTPD_PATH.default": "some-workspace/httpd.conf",
 			}))
 

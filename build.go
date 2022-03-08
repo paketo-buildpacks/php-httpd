@@ -59,7 +59,7 @@ func Build(entryResolver EntryResolver, config ConfigWriter, clock chronos.Clock
 		phpHttpdLayer.Build = build
 
 		// test this
-		phpHttpdLayer.LaunchEnv.Default("PHP_HTTPD_PATH", httpdConfigPath)
+		phpHttpdLayer.SharedEnv.Default("PHP_HTTPD_PATH", httpdConfigPath)
 		phpHttpdLayer.Metadata = map[string]interface{}{
 			"built_at": clock.Now().Format(time.RFC3339Nano),
 		}

@@ -83,6 +83,9 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				"    Web directory: htdocs",
 				"    Enable HTTPS redirect: true",
 				"",
+				"  Configuring build environment",
+				MatchRegexp(fmt.Sprintf(`    PHP_HTTPD_PATH -> "/layers/%s/php-httpd-config/httpd.conf"`, strings.ReplaceAll(buildpackInfo.Buildpack.ID, "/", "_"))),
+				"",
 				"  Configuring launch environment",
 				MatchRegexp(fmt.Sprintf(`    PHP_HTTPD_PATH -> "/layers/%s/php-httpd-config/httpd.conf"`, strings.ReplaceAll(buildpackInfo.Buildpack.ID, "/", "_"))),
 			))
