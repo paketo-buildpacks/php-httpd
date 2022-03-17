@@ -192,29 +192,5 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).To(MatchError(ContainSubstring("config writing error")))
 			})
 		})
-
-		context("when config file cannot be written", func() {
-			it.Before(func() {
-				config.WriteCall.Returns.Error = errors.New("config writing error")
-			})
-			it("returns an error", func() {
-				_, err := build(packit.BuildContext{
-					WorkingDir: workingDir,
-					CNBPath:    cnbDir,
-					Stack:      "some-stack",
-					BuildpackInfo: packit.BuildpackInfo{
-						Name:    "Some Buildpack",
-						Version: "some-version",
-					},
-					Plan: packit.BuildpackPlan{
-						Entries: []packit.BuildpackPlanEntry{
-							{Name: phphttpd.PhpHttpdConfigLayer},
-						},
-					},
-					Layers: packit.Layers{Path: layerDir},
-				})
-				Expect(err).To(MatchError(ContainSubstring("config writing error")))
-			})
-		})
 	})
 }

@@ -18,7 +18,8 @@ type EntryResolver interface {
 
 //go:generate faux --interface ConfigWriter --output fakes/config_writer.go
 
-// ConfigWriter sets up the HTTPD configuration file from via Go templating and user-set environment variables.
+// ConfigWriter sets up the HTTPD configuration file with defaults, and adds in
+// user-set environment variables.
 type ConfigWriter interface {
 	Write(layerPath, workingDir, cnbPath string) (string, error)
 }
@@ -26,7 +27,7 @@ type ConfigWriter interface {
 // Build will return a packit.BuildFunc that will be invoked during the build
 // phase of the buildpack lifecycle.
 //
-// Build will create a layer dedicated to PHP FPM configuration, configure default FPM
+// Build will create a layer dedicated to PHP HTTPD configuration, configure default HTTPD
 // settings, incorporate other configuration sources, and make the
 // configuration available at both build-time and
 // launch-time.
