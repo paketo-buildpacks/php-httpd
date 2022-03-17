@@ -1,0 +1,1 @@
+web: httpd -f $PHP_HTTPD_PATH -k start -DFOREGROUND
