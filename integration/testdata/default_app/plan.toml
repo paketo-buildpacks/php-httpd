@@ -1,0 +1,11 @@
+[[requires]]
+  name = "httpd-config"
+
+  [requires.metadata]
+    launch = true
+
+[[requires]]
+  name = "httpd"
+
+  [requires.metadata]
+    launch = true
