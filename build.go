@@ -1,8 +1,6 @@
 package phphttpd
 
 import (
-	"time"
-
 	"github.com/paketo-buildpacks/packit/v2"
 	"github.com/paketo-buildpacks/packit/v2/chronos"
 	"github.com/paketo-buildpacks/packit/v2/scribe"
@@ -61,9 +59,6 @@ func Build(entryResolver EntryResolver, config ConfigWriter, clock chronos.Clock
 
 		// test this
 		phpHttpdLayer.SharedEnv.Default("PHP_HTTPD_PATH", httpdConfigPath)
-		phpHttpdLayer.Metadata = map[string]interface{}{
-			"built_at": clock.Now().Format(time.RFC3339Nano),
-		}
 		logger.EnvironmentVariables(phpHttpdLayer)
 
 		return packit.BuildResult{

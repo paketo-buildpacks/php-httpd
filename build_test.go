@@ -103,9 +103,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		Expect(result.Layers[0].Build).To(BeFalse())
 		Expect(result.Layers[0].Cache).To(BeFalse())
 		Expect(result.Layers[0].Launch).To(BeFalse())
-		Expect(result.Layers[0].Metadata).To(Equal(map[string]interface{}{
-			"built_at": timestamp.Format(time.RFC3339Nano),
-		}))
 	})
 
 	context("when httpd-config is required at launch time", func() {
