@@ -21,6 +21,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 
 		pack   occam.Pack
 		docker occam.Docker
+
 		source string
 		name   string
 	)
@@ -72,20 +73,24 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				}).
 				Execute(name, source)
 			Expect(err).ToNot(HaveOccurred(), logs.String)
+
 			Expect(logs).To(ContainLines(
 				MatchRegexp(fmt.Sprintf(`%s \d+\.\d+\.\d+`, buildpackInfo.Buildpack.Name)),
 				"  Getting the layer associated with the HTTPD configuration",
 				"    /layers/paketo-buildpacks_php-httpd/php-httpd-config",
-				"",
+			))
+			Expect(logs).To(ContainLines(
 				"  Setting up the HTTPD configuration file",
 				"    Including user-provided HTTPD configuration from: /workspace/.httpd.conf.d/*.conf",
 				"    Server admin: admin@localhost",
 				"    Web directory: htdocs",
 				"    Enable HTTPS redirect: true",
-				"",
+			))
+			Expect(logs).To(ContainLines(
 				"  Configuring build environment",
 				MatchRegexp(fmt.Sprintf(`    PHP_HTTPD_PATH -> "/layers/%s/php-httpd-config/httpd.conf"`, strings.ReplaceAll(buildpackInfo.Buildpack.ID, "/", "_"))),
-				"",
+			))
+			Expect(logs).To(ContainLines(
 				"  Configuring launch environment",
 				MatchRegexp(fmt.Sprintf(`    PHP_HTTPD_PATH -> "/layers/%s/php-httpd-config/httpd.conf"`, strings.ReplaceAll(buildpackInfo.Buildpack.ID, "/", "_"))),
 			))
