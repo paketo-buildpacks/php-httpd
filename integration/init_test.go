@@ -17,13 +17,17 @@ import (
 )
 
 var (
-	buildpack             string
-	offlineBuildpack      string
-	buildPlanBuildpack    string
-	httpdBuildpack        string
-	offlineHttpdBuildpack string
-	procfileBuildpack     string
-	root                  string
+	buildpack              string
+	offlineBuildpack       string
+	buildPlanBuildpack     string
+	httpdBuildpack         string
+	offlineHttpdBuildpack  string
+	phpBuildpack           string
+	offlinePhpBuildpack    string
+	phpFpmBuildpack        string
+	offlinePhpFpmBuildpack string
+	procfileBuildpack      string
+	root                   string
 
 	buildpackInfo struct {
 		Buildpack struct {
@@ -41,6 +45,8 @@ func TestIntegration(t *testing.T) {
 	var config struct {
 		BuildPlan string `json:"build-plan"`
 		Httpd     string `json:"httpd"`
+		Php       string `json:"php"`
+		PhpFpm    string `json:"php-fpm"`
 		Procfile  string `json:"procfile"`
 	}
 
@@ -83,6 +89,24 @@ func TestIntegration(t *testing.T) {
 	offlineHttpdBuildpack, err = buildpackStore.Get.
 		WithOfflineDependencies().
 		Execute(config.Httpd)
+	Expect(err).NotTo(HaveOccurred())
+
+	phpBuildpack, err = buildpackStore.Get.
+		Execute(config.Php)
+	Expect(err).NotTo(HaveOccurred())
+
+	offlinePhpBuildpack, err = buildpackStore.Get.
+		WithOfflineDependencies().
+		Execute(config.Php)
+	Expect(err).NotTo(HaveOccurred())
+
+	phpFpmBuildpack, err = buildpackStore.Get.
+		Execute(config.PhpFpm)
+	Expect(err).NotTo(HaveOccurred())
+
+	offlinePhpFpmBuildpack, err = buildpackStore.Get.
+		WithOfflineDependencies().
+		Execute(config.PhpFpm)
 	Expect(err).NotTo(HaveOccurred())
 
 	procfileBuildpack, err = buildpackStore.Get.

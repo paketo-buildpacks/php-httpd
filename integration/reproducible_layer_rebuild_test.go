@@ -67,6 +67,8 @@ func testReproducibleLayerRebuild(t *testing.T, context spec.G, it spec.S) {
 				WithPullPolicy("never").
 				WithBuildpacks(
 					httpdBuildpack,
+					phpBuildpack,
+					phpFpmBuildpack,
 					buildpack,
 					buildPlanBuildpack,
 					procfileBuildpack,
@@ -81,10 +83,10 @@ func testReproducibleLayerRebuild(t *testing.T, context spec.G, it spec.S) {
 
 			imageIDs[firstImage.ID] = struct{}{}
 
-			Expect(firstImage.Buildpacks).To(HaveLen(4))
+			Expect(firstImage.Buildpacks).To(HaveLen(6))
 
-			Expect(firstImage.Buildpacks[1].Key).To(Equal(buildpackInfo.Buildpack.ID))
-			Expect(firstImage.Buildpacks[1].Layers).To(HaveKey("php-httpd-config"))
+			Expect(firstImage.Buildpacks[3].Key).To(Equal(buildpackInfo.Buildpack.ID))
+			Expect(firstImage.Buildpacks[3].Layers).To(HaveKey("php-httpd-config"))
 
 			Expect(logs.String()).To(ContainSubstring("  Executing build process"))
 
@@ -94,12 +96,12 @@ func testReproducibleLayerRebuild(t *testing.T, context spec.G, it spec.S) {
 
 			imageIDs[secondImage.ID] = struct{}{}
 
-			Expect(secondImage.Buildpacks).To(HaveLen(4))
+			Expect(secondImage.Buildpacks).To(HaveLen(6))
 
-			Expect(secondImage.Buildpacks[1].Key).To(Equal(buildpackInfo.Buildpack.ID))
-			Expect(secondImage.Buildpacks[1].Layers).To(HaveKey("php-httpd-config"))
+			Expect(secondImage.Buildpacks[3].Key).To(Equal(buildpackInfo.Buildpack.ID))
+			Expect(secondImage.Buildpacks[3].Layers).To(HaveKey("php-httpd-config"))
 
-			Expect(secondImage.Buildpacks[1].Layers["php-httpd-config"].SHA).To(Equal(firstImage.Buildpacks[1].Layers["php-httpd-config"].SHA))
+			Expect(secondImage.Buildpacks[3].Layers["php-httpd-config"].SHA).To(Equal(firstImage.Buildpacks[3].Layers["php-httpd-config"].SHA))
 		})
 	})
 }

@@ -63,6 +63,8 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				WithPullPolicy("never").
 				WithBuildpacks(
 					httpdBuildpack,
+					phpBuildpack,
+					phpFpmBuildpack,
 					buildpack,
 					buildPlanBuildpack,
 					procfileBuildpack,
@@ -102,7 +104,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				Execute(image.ID)
 			Expect(err).NotTo(HaveOccurred())
 
-			Eventually(container).Should(Serve(ContainSubstring("Hello World!")).OnPort(8080))
+			Eventually(container).Should(Serve(ContainSubstring("SUCCESS: date loads.")).OnPort(8080).WithEndpoint("/index.php?date"))
 		})
 	})
 }

@@ -2,5 +2,7 @@
   "builder": "index.docker.io/paketobuildpacks/builder:buildpackless-full",
   "build-plan": "github.com/paketo-community/build-plan",
   "httpd": "github.com/paketo-buildpacks/httpd",
+  "php": "github.com/paketo-buildpacks/php-dist",
+  "php-fpm": "github.com/paketo-buildpacks/php-fpm",
   "procfile": "github.com/paketo-buildpacks/procfile"
 }
