@@ -118,5 +118,6 @@ func TestIntegration(t *testing.T) {
 	suite := spec.New("Integration", spec.Report(report.Terminal{}), spec.Parallel())
 	suite("Default", testDefault)
 	suite("Offline", testOffline)
+	suite("ReproducibleLayerRebuild", testReproducibleLayerRebuild)
 	suite.Run(t)
 }

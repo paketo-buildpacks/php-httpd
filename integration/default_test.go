@@ -21,6 +21,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 
 		pack   occam.Pack
 		docker occam.Docker
+
 		source string
 		name   string
 	)
@@ -74,6 +75,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 				}).
 				Execute(name, source)
 			Expect(err).ToNot(HaveOccurred(), logs.String)
+
 			Expect(logs).To(ContainLines(
 				MatchRegexp(fmt.Sprintf(`%s \d+\.\d+\.\d+`, buildpackInfo.Buildpack.Name)),
 				"  Getting the layer associated with the HTTPD configuration",

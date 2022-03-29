@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/paketo-buildpacks/packit/v2"
 	"github.com/paketo-buildpacks/packit/v2/chronos"
@@ -30,7 +29,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		buffer        *bytes.Buffer
 		config        *fakes.ConfigWriter
 		entryResolver *fakes.EntryResolver
-		timestamp     time.Time
 
 		build packit.BuildFunc
 	)
@@ -46,10 +44,8 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = os.MkdirTemp("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		timestamp = time.Now()
-		clock := chronos.NewClock(func() time.Time {
-			return timestamp
-		})
+		clock := chronos.DefaultClock
+
 		buffer = bytes.NewBuffer(nil)
 		logEmitter := scribe.NewEmitter(buffer)
 
