@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/paketo-buildpacks/packit/v2"
 	"github.com/paketo-buildpacks/packit/v2/chronos"
@@ -30,7 +29,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		buffer        *bytes.Buffer
 		config        *fakes.ConfigWriter
 		entryResolver *fakes.EntryResolver
-		timestamp     time.Time
 
 		build packit.BuildFunc
 	)
@@ -46,10 +44,8 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = os.MkdirTemp("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		timestamp = time.Now()
-		clock := chronos.NewClock(func() time.Time {
-			return timestamp
-		})
+		clock := chronos.DefaultClock
+
 		buffer = bytes.NewBuffer(nil)
 		logEmitter := scribe.NewEmitter(buffer)
 
@@ -103,9 +99,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		Expect(result.Layers[0].Build).To(BeFalse())
 		Expect(result.Layers[0].Cache).To(BeFalse())
 		Expect(result.Layers[0].Launch).To(BeFalse())
-		Expect(result.Layers[0].Metadata).To(Equal(map[string]interface{}{
-			"built_at": timestamp.Format(time.RFC3339Nano),
-		}))
 	})
 
 	context("when httpd-config is required at launch time", func() {
