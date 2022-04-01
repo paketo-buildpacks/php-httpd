@@ -1,5 +1,5 @@
 [[requires]]
-  name = "httpd-config"
+  name = "php-httpd-config"
 
   [requires.metadata]
     launch = true
