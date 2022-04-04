@@ -10,7 +10,7 @@ locatable through the buildpack-set `$PHP_HTTPD_PATH` environment variable at la
 
 ## Integration
 
-The PHP HTTPD CNB provides `httpd-config`, which can be required by subsequent
+The PHP HTTPD CNB provides `php-httpd-config`, which can be required by subsequent
 buildpacks. In order to configure HTTPD, the user must declare the intention to
 use HTTPD as the web-server by setting the `$BP_PHP_SERVER` environment
 variable to `httpd` at build-time.
