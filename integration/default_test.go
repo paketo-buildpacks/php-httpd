@@ -79,7 +79,7 @@ func testDefault(t *testing.T, context spec.G, it spec.S) {
 			Expect(logs).To(ContainLines(
 				MatchRegexp(fmt.Sprintf(`%s \d+\.\d+\.\d+`, buildpackInfo.Buildpack.Name)),
 				"  Getting the layer associated with the HTTPD configuration",
-				"    /layers/paketo-buildpacks_php-httpd/php-httpd-config",
+				ContainSubstring(fmt.Sprintf("    /layers/%s/php-httpd-config", strings.ReplaceAll(buildpackInfo.Buildpack.ID, "/", "_"))),
 			))
 			Expect(logs).To(ContainLines(
 				"  Setting up the HTTPD configuration file",
