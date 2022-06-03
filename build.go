@@ -46,11 +46,8 @@ func Build(config ConfigWriter, logger scribe.Emitter) packit.BuildFunc {
 		logger.Break()
 
 		planner := draft.NewPlanner()
-		launch, build := planner.MergeLayerTypes(PhpHttpdConfig, context.Plan.Entries)
-		phpHttpdLayer.Launch = launch
-		phpHttpdLayer.Build = build
+		phpHttpdLayer.Launch, phpHttpdLayer.Build = planner.MergeLayerTypes(PhpHttpdConfig, context.Plan.Entries)
 
-		// test this
 		phpHttpdLayer.SharedEnv.Default("PHP_HTTPD_PATH", httpdConfigPath)
 		logger.EnvironmentVariables(phpHttpdLayer)
 
