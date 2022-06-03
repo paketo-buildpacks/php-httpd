@@ -35,6 +35,7 @@ func testDetect(t *testing.T, context spec.G, it spec.S) {
 		it.Before(func() {
 			Expect(os.Setenv("BP_PHP_SERVER", "httpd")).To(Succeed())
 		})
+
 		it.After(func() {
 			Expect(os.Unsetenv("BP_PHP_SERVER")).To(Succeed())
 		})
@@ -61,7 +62,7 @@ func testDetect(t *testing.T, context spec.G, it spec.S) {
 			_, err := detect(packit.DetectContext{
 				WorkingDir: workingDir,
 			})
-			Expect(err).To(MatchError(packit.Fail))
+			Expect(err).To(MatchError(packit.Fail.WithMessage("BP_PHP_SERVER is not set to 'httpd'")))
 		})
 	})
 }
