@@ -25,9 +25,8 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir string
 		cnbDir     string
 
-		buffer        *bytes.Buffer
-		config        *fakes.ConfigWriter
-		entryResolver *fakes.EntryResolver
+		buffer *bytes.Buffer
+		config *fakes.ConfigWriter
 
 		build packit.BuildFunc
 	)
@@ -46,12 +45,10 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		buffer = bytes.NewBuffer(nil)
 		logEmitter := scribe.NewEmitter(buffer)
 
-		entryResolver = &fakes.EntryResolver{}
-
 		config = &fakes.ConfigWriter{}
 		config.WriteCall.Returns.String = "some-workspace/httpd.conf"
 
-		build = phphttpd.Build(entryResolver, config, logEmitter)
+		build = phphttpd.Build(config, logEmitter)
 	})
 
 	it.After(func() {
@@ -70,7 +67,9 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 			},
 			Plan: packit.BuildpackPlan{
 				Entries: []packit.BuildpackPlanEntry{
-					{Name: "some-entry"},
+					{
+						Name: phphttpd.PhpHttpdConfig,
+					},
 				},
 			},
 			Layers: packit.Layers{Path: layerDir},
@@ -80,11 +79,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		Expect(config.WriteCall.Receives.LayerPath).To(Equal(filepath.Join(layerDir, "php-httpd-config")))
 		Expect(config.WriteCall.Receives.WorkingDir).To(Equal(workingDir))
 		Expect(config.WriteCall.Receives.CnbPath).To(Equal(cnbDir))
-
-		Expect(entryResolver.MergeLayerTypesCall.Receives.Name).To(Equal(phphttpd.PhpHttpdConfig))
-		Expect(entryResolver.MergeLayerTypesCall.Receives.Entries).To(Equal([]packit.BuildpackPlanEntry{
-			{Name: "some-entry"},
-		}))
 
 		Expect(result.Layers).To(HaveLen(1))
 		Expect(result.Layers[0].Name).To(Equal("php-httpd-config"))
@@ -99,9 +93,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 	})
 
 	context("when httpd-config is required at launch time", func() {
-		it.Before(func() {
-			entryResolver.MergeLayerTypesCall.Returns.Launch = true
-		})
 		it("makes the layer available at launch time", func() {
 			result, err := build(packit.BuildContext{
 				WorkingDir: workingDir,
@@ -113,7 +104,12 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 				},
 				Plan: packit.BuildpackPlan{
 					Entries: []packit.BuildpackPlanEntry{
-						{Name: "some-entry"},
+						{
+							Name: phphttpd.PhpHttpdConfig,
+							Metadata: map[string]interface{}{
+								"launch": true,
+							},
+						},
 					},
 				},
 				Layers: packit.Layers{Path: layerDir},

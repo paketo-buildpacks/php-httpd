@@ -2,16 +2,9 @@ package phphttpd
 
 import (
 	"github.com/paketo-buildpacks/packit/v2"
+	"github.com/paketo-buildpacks/packit/v2/draft"
 	"github.com/paketo-buildpacks/packit/v2/scribe"
 )
-
-//go:generate faux --interface EntryResolver --output fakes/entry_resolver.go
-
-// EntryResolver defines the interface for picking the most relevant entry from
-// the Buildpack Plan entries.
-type EntryResolver interface {
-	MergeLayerTypes(name string, entries []packit.BuildpackPlanEntry) (launch, build bool)
-}
 
 //go:generate faux --interface ConfigWriter --output fakes/config_writer.go
 
@@ -28,7 +21,7 @@ type ConfigWriter interface {
 // settings, incorporate other configuration sources, and make the
 // configuration available at both build-time and
 // launch-time.
-func Build(entryResolver EntryResolver, config ConfigWriter, logger scribe.Emitter) packit.BuildFunc {
+func Build(config ConfigWriter, logger scribe.Emitter) packit.BuildFunc {
 	return func(context packit.BuildContext) (packit.BuildResult, error) {
 		logger.Title("%s %s", context.BuildpackInfo.Name, context.BuildpackInfo.Version)
 
@@ -52,7 +45,8 @@ func Build(entryResolver EntryResolver, config ConfigWriter, logger scribe.Emitt
 		}
 		logger.Break()
 
-		launch, build := entryResolver.MergeLayerTypes(PhpHttpdConfig, context.Plan.Entries)
+		planner := draft.NewPlanner()
+		launch, build := planner.MergeLayerTypes(PhpHttpdConfig, context.Plan.Entries)
 		phpHttpdLayer.Launch = launch
 		phpHttpdLayer.Build = build
 
