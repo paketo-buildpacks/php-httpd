@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/paketo-buildpacks/packit/v2"
-	"github.com/paketo-buildpacks/packit/v2/chronos"
 	"github.com/paketo-buildpacks/packit/v2/draft"
 	"github.com/paketo-buildpacks/packit/v2/scribe"
 	phphttpd "github.com/paketo-buildpacks/php-httpd"
@@ -17,6 +16,6 @@ func main() {
 
 	packit.Run(
 		phphttpd.Detect(),
-		phphttpd.Build(entryResolver, config, chronos.DefaultClock, logEmitter),
+		phphttpd.Build(entryResolver, config, logEmitter),
 	)
 }

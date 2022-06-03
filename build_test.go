@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/paketo-buildpacks/packit/v2"
-	"github.com/paketo-buildpacks/packit/v2/chronos"
 	"github.com/paketo-buildpacks/packit/v2/scribe"
 	phphttpd "github.com/paketo-buildpacks/php-httpd"
 	"github.com/paketo-buildpacks/php-httpd/fakes"
@@ -44,8 +43,6 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		workingDir, err = os.MkdirTemp("", "working-dir")
 		Expect(err).NotTo(HaveOccurred())
 
-		clock := chronos.DefaultClock
-
 		buffer = bytes.NewBuffer(nil)
 		logEmitter := scribe.NewEmitter(buffer)
 
@@ -54,7 +51,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		config = &fakes.ConfigWriter{}
 		config.WriteCall.Returns.String = "some-workspace/httpd.conf"
 
-		build = phphttpd.Build(entryResolver, config, clock, logEmitter)
+		build = phphttpd.Build(entryResolver, config, logEmitter)
 	})
 
 	it.After(func() {
