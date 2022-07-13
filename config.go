@@ -2,6 +2,7 @@ package phphttpd
 
 import (
 	"bytes"
+	_ "embed"
 	"errors"
 	"fmt"
 	"io"
@@ -12,6 +13,9 @@ import (
 
 	"github.com/paketo-buildpacks/packit/v2/scribe"
 )
+
+//go:embed assets/default.conf
+var DefaultHTTPDConfTemplate string
 
 type HttpdConfig struct {
 	ServerAdmin          string
@@ -32,8 +36,8 @@ func NewConfig(logger scribe.Emitter) Config {
 	}
 }
 
-func (c Config) Write(layerPath, workingDir, cnbPath string) (string, error) {
-	tmpl, err := template.New("httpd.conf").ParseFiles(filepath.Join(cnbPath, "config", "httpd.conf"))
+func (c Config) Write(layerPath, workingDir string) (string, error) {
+	tmpl, err := template.New("httpd.conf").Parse(DefaultHTTPDConfTemplate)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse HTTPD config template: %w", err)
 	}

@@ -11,7 +11,7 @@ import (
 // ConfigWriter sets up the HTTPD configuration file with defaults, and adds in
 // user-set environment variables.
 type ConfigWriter interface {
-	Write(layerPath, workingDir, cnbPath string) (string, error)
+	Write(layerPath, workingDir string) (string, error)
 }
 
 // Build will return a packit.BuildFunc that will be invoked during the build
@@ -39,7 +39,7 @@ func Build(config ConfigWriter, logger scribe.Emitter) packit.BuildFunc {
 		}
 
 		logger.Process("Setting up the HTTPD configuration file")
-		httpdConfigPath, err := config.Write(phpHttpdLayer.Path, context.WorkingDir, context.CNBPath)
+		httpdConfigPath, err := config.Write(phpHttpdLayer.Path, context.WorkingDir)
 		if err != nil {
 			return packit.BuildResult{}, err
 		}
