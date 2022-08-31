@@ -5,7 +5,7 @@ api = "0.7"
   homepage = "https://github.com/paketo-buildpacks/php-httpd"
   id = "paketo-buildpacks/php-httpd"
   keywords = ["php", "httpd"]
-  name = "Paketo PHP HTTPD Buildpack"
+  name = "Paketo Buildpack for PHP HTTPD"
 
   [[buildpack.licenses]]
     type = "Apache-2.0"
