@@ -1,6 +1,9 @@
 {
-  "builder": "index.docker.io/paketobuildpacks/builder:buildpackless-full",
-  "build-plan": "github.com/paketo-community/build-plan",
+  "build-plan": "index.docker.io/paketocommunity/build-plan",
+  "builders": [
+    "index.docker.io/paketobuildpacks/builder-jammy-buildpackless-base:latest",
+    "index.docker.io/paketobuildpacks/ubuntu-noble-builder-buildpackless:latest"
+  ],
   "httpd": "github.com/paketo-buildpacks/httpd",
   "php": "github.com/paketo-buildpacks/php-dist",
   "php-fpm": "github.com/paketo-buildpacks/php-fpm",

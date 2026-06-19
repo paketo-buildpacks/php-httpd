@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -53,7 +54,11 @@ func TestIntegration(t *testing.T) {
 
 	file, err := os.Open("../integration.json")
 	Expect(err).NotTo(HaveOccurred())
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			Expect(err).NotTo(HaveOccurred())
+		}
+	}()
 
 	Expect(json.NewDecoder(file).Decode(&config)).To(Succeed())
 
@@ -68,6 +73,7 @@ func TestIntegration(t *testing.T) {
 
 	buildpackStore := occam.NewBuildpackStore()
 	libpakBuildpackStore := occam.NewBuildpackStore().WithPackager(packagers.NewLibpak())
+	targetedBuildpackStore := buildpackStore.WithTarget("linux/" + runtime.GOARCH)
 
 	buildpack, err = buildpackStore.Get.
 		WithVersion("1.2.3").
@@ -80,33 +86,33 @@ func TestIntegration(t *testing.T) {
 		Execute(root)
 	Expect(err).NotTo(HaveOccurred())
 
-	buildPlanBuildpack, err = buildpackStore.Get.
+	buildPlanBuildpack, err = targetedBuildpackStore.Get.
 		Execute(config.BuildPlan)
 	Expect(err).NotTo(HaveOccurred())
 
-	httpdBuildpack, err = buildpackStore.Get.
+	httpdBuildpack, err = targetedBuildpackStore.Get.
 		Execute(config.Httpd)
 	Expect(err).NotTo(HaveOccurred())
 
-	offlineHttpdBuildpack, err = buildpackStore.Get.
+	offlineHttpdBuildpack, err = targetedBuildpackStore.Get.
 		WithOfflineDependencies().
 		Execute(config.Httpd)
 	Expect(err).NotTo(HaveOccurred())
 
-	phpBuildpack, err = buildpackStore.Get.
+	phpBuildpack, err = targetedBuildpackStore.Get.
 		Execute(config.Php)
 	Expect(err).NotTo(HaveOccurred())
 
-	offlinePhpBuildpack, err = buildpackStore.Get.
+	offlinePhpBuildpack, err = targetedBuildpackStore.Get.
 		WithOfflineDependencies().
 		Execute(config.Php)
 	Expect(err).NotTo(HaveOccurred())
 
-	phpFpmBuildpack, err = buildpackStore.Get.
+	phpFpmBuildpack, err = targetedBuildpackStore.Get.
 		Execute(config.PhpFpm)
 	Expect(err).NotTo(HaveOccurred())
 
-	offlinePhpFpmBuildpack, err = buildpackStore.Get.
+	offlinePhpFpmBuildpack, err = targetedBuildpackStore.Get.
 		WithOfflineDependencies().
 		Execute(config.PhpFpm)
 	Expect(err).NotTo(HaveOccurred())
